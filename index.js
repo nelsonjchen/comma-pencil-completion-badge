@@ -23,27 +23,9 @@ const generateJSONResponse = (obj, pretty) => {
   })
 }
 
-const processJSONResponseToShields = (obj) => {
-  const masksChanged = obj.result.filter((name) => name.startsWith('masks/'))
-  const percentage =
-    (
-      (masksChanged.length / 1000.0) *
-      100
-    ).toFixed(2) + "%"
-
-  return {
-    schemaVersion: 1,
-    label: "compleition",
-    message: percentage,
-    color: 'green',
-    changed: masksChanged
-  }
-}
-
 addEventListener('fetch', event => {
   event.respondWith(handleRequest(event.request))
 })
-
 
 async function handleRequest(request) {
   const response = await fetch(githubUrl)
