@@ -1,17 +1,3 @@
-# 👷 `worker-template` Hello World
+# comma10k completion badge
 
-A template for kick starting a Cloudflare worker project.
-
-[`index.js`](https://github.com/cloudflare/worker-template/blob/master/index.js) is the content of the Workers script.
-
-#### Wrangler
-
-To generate using [wrangler](https://github.com/cloudflare/wrangler)
-
-```
-wrangler generate projectname https://github.com/cloudflare/worker-template
-```
-
-#### Serverless
-
-To deploy using serverless add a [`serverless.yml`](https://serverless.com/framework/docs/providers/cloudflare/) file.
+Code ripped from (Cloudflare Employee): https://github.com/adamschwartz/web.scraper.workers.dev/blob/995e0fd351bf349955724d403658be9a40c0bf18/index.js#L70-L128

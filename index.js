@@ -1,3 +1,5 @@
+// Most code if not all ripped from https://github.com/adamschwartz/web.scraper.workers.dev/blob/995e0fd351bf349955724d403658be9a40c0bf18/index.js#L70-L128
+
 const githubUrl = "https://github.com/nelsonjchen/comma10k/compare/stat_commit...nelsonjchen:master?expand=1"
 const selector = ".content.collapse.js-transitionable > li > a"
 const pretty = true
