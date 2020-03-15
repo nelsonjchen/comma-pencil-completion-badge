@@ -27,8 +27,8 @@ const processJSONResponseToShields = (obj) => {
   const masksChanged = obj.result.filter((name) => name.startsWith('masks/'))
   const percentage =
     (
-      (masksChanged.length / 1000.0)
-      * 100
+      (masksChanged.length / 1000.0) *
+      100
     ).toFixed(2) + "%"
 
   return {
@@ -61,68 +61,119 @@ async function handleRequest(request) {
     }, pretty)
   }
 
+  // Grab number of files changed and commit IDs
+
   const rewriter = new HTMLRewriter()
 
-  const matches = {}
-  const selectors = selector.split(',').map(s => s.trim())
 
+  let changeCount = 0
+  let diffUrl = ''
+
+  const changeCountSelector = 'a[href="#files_bucket"] > .Counter'
+  const diffUrlSelector = 'include-fragment[src^="/commaai/comma10k/diffs"]'
+
+  let texts = []
   try {
-    selectors.forEach((selector) => {
-      matches[selector] = []
 
-      let nextText = ''
-
-      rewriter.on(selector, {
-        element(element) {
-          matches[selector].push(true)
-          nextText = ''
-        },
-
-        text(text) {
-          nextText += text.text
-
-          if (text.lastInTextNode) {
-            if (spaced) nextText += ' '
-            matches[selector].push(nextText)
-            nextText = ''
-          }
+    rewriter.on(changeCountSelector, {
+      text(text) {
+        if (text.text.length > 0) {
+          changeCount = parseInt(text.text)
         }
-      })
+      }
+    })
+
+    rewriter.on(diffUrlSelector, {
+      element(element) {
+        diffUrl = element.getAttribute('src').replace(/&amp;/g, '&');
+      }
     })
 
   } catch (error) {
     return generateJSONResponse({
-      error: `The selector \`${ selector }\` is invalid or another HTML parsing error occured`
+      error: `The page selector \`${ selector }\` is invalid or another HTML parsing error occured. ${error}`
     }, pretty)
   }
+
 
   const transformed = rewriter.transform(response)
 
   await transformed.text()
 
-  selectors.forEach((selector) => {
-    const nodeCompleteTexts = []
+  // Generate diffURLs to hit
+  let diffUrls = []
+  let diffUrlsPageCount = Math.floor(changeCount / 300)
+  for (let step = 0; step <= diffUrlsPageCount; step++) {
+    diffUrls.push(
+      diffUrl.replace('start_entry=300', `start_entry=${step * 300}`)
+    )
+  }
 
-    let nextText = ''
+  return generateJSONResponse({
+    count: changeCount,
+    texts,
+    diffUrl,
+    diffUrls,
+  }, pretty)
 
-    matches[selector].forEach(text => {
-      if (text === true) {
-        if (nextText.trim() !== '') {
-          nodeCompleteTexts.push(cleanText(nextText))
-          nextText = ''
-        }
-      } else {
-        nextText += text
-      }
-    })
 
-    const lastText = cleanText(nextText)
-    if (lastText !== '') nodeCompleteTexts.push(lastText)
-    matches[selector] = nodeCompleteTexts
-  })
+  // try {
+  //   selectors.forEach((selector) => {
+  //     matches[selector] = []
 
-  return generateJSONResponse(
-    processJSONResponseToShields({
-      result: selectors.length === 1 ? matches[selectors[0]] : matches
-    }), pretty)
+  //     let nextText = ''
+
+  //     rewriter.on(selector, {
+  //       element(element) {
+  //         matches[selector].push(true)
+  //         nextText = ''
+  //       },
+
+  //       text(text) {
+  //         nextText += text.text
+
+  //         if (text.lastInTextNode) {
+  //           if (spaced) nextText += ' '
+  //           matches[selector].push(nextText)
+  //           nextText = ''
+  //         }
+  //       }
+  //     })
+  //   })
+
+  // } catch (error) {
+  //   return generateJSONResponse({
+  //     error: `The selector \`${ selector }\` is invalid or another HTML parsing error occured`
+  //   }, pretty)
+  // }
+
+  // const transformed = rewriter.transform(response)
+
+  // await transformed.text()
+
+  // selectors.forEach((selector) => {
+  //   const nodeCompleteTexts = []
+
+  //   let nextText = ''
+
+  //   matches[selector].forEach(text => {
+  //     if (text === true) {
+  //       if (nextText.trim() !== '') {
+  //         nodeCompleteTexts.push(cleanText(nextText))
+  //         nextText = ''
+  //       }
+  //     } else {
+  //       nextText += text
+  //     }
+  //   })
+
+  //   const lastText = cleanText(nextText)
+  //   if (lastText !== '') nodeCompleteTexts.push(lastText)
+  //   matches[selector] = nodeCompleteTexts
+  // })
+
+  // return generateJSONResponse(
+  //   processJSONResponseToShields({
+  //     result: selectors.length === 1 ? matches[selectors[0]] : matches
+  //   }), pretty)
 }
