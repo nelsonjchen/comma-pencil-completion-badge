@@ -109,11 +109,17 @@ async function handleRequest(request) {
     )
   }
 
+  let diffResponses = await Promise.all(diffUrls.map(async (diffUrl) => {
+    let diffResponse = await fetch(`https://github.com${diffUrl}`)
+    return diffResponse
+  }))
+
   return generateJSONResponse({
     count: changeCount,
     texts,
     diffUrl,
     diffUrls,
+    diffResponses,
   }, pretty)
 
 
