@@ -109,77 +109,51 @@ async function handleRequest(request) {
     )
   }
 
-  let diffResponses = await Promise.all(diffUrls.map(async (diffUrl) => {
-    let diffResponse = await fetch(`https://github.com${diffUrl}`)
-    return diffResponse
-  }))
+  let diffFileNames = (await Promise.all(
+    diffUrls.map(async (diffUrl) => {
+      let diffResponse = await fetch(`https://github.com${diffUrl}`)
+      const rewriter = new HTMLRewriter()
+      let filenames = []
+      rewriter.on('.file-info > a', {
+        text(text) {
+          if (text.text.startsWith('masks/')) {
+            filenames.push(text.text)
+          }
+        }
+      })
+      const transformed = rewriter.transform(diffResponse)
+
+      await transformed.text()
+
+      return filenames
+    })
+  )).flat(1)
+
+  const percentageFloat = (diffFileNames.length / 1000.0) * 100
+
+  let color = 'red'
+  if (percentageFloat > 90.0) {
+    color = 'green'
+  } else if (percentageFloat > 80.0) {
+    color = 'yellow'
+  } else if (percentageFloat > 70.0) {
+    color = 'orange'
+  }
+
+  const percentage =
+    percentageFloat.toFixed(2) + "%"
 
   return generateJSONResponse({
     count: changeCount,
     texts,
     diffUrl,
     diffUrls,
-    diffResponses,
+    diffFileNames,
+    schemaVersion: 1,
+    label: "Count and Percentage of Images Labeled",
+    message: `${diffFileNames.length}, ${percentage}`,
+    color,
   }, pretty)
 
 
-  // try {
-  //   selectors.forEach((selector) => {
-  //     matches[selector] = []
-
-  //     let nextText = ''
-
-  //     rewriter.on(selector, {
-  //       element(element) {
-  //         matches[selector].push(true)
-  //         nextText = ''
-  //       },
-
-  //       text(text) {
-  //         nextText += text.text
-
-  //         if (text.lastInTextNode) {
-  //           if (spaced) nextText += ' '
-  //           matches[selector].push(nextText)
-  //           nextText = ''
-  //         }
-  //       }
-  //     })
-  //   })
-
-  // } catch (error) {
-  //   return generateJSONResponse({
-  //     error: `The selector \`${ selector }\` is invalid or another HTML parsing error occured`
-  //   }, pretty)
-  // }
-
-  // const transformed = rewriter.transform(response)
-
-  // await transformed.text()
-
-  // selectors.forEach((selector) => {
-  //   const nodeCompleteTexts = []
-
-  //   let nextText = ''
-
-  //   matches[selector].forEach(text => {
-  //     if (text === true) {
-  //       if (nextText.trim() !== '') {
-  //         nodeCompleteTexts.push(cleanText(nextText))
-  //         nextText = ''
-  //       }
-  //     } else {
-  //       nextText += text
-  //     }
-  //   })
-
-  //   const lastText = cleanText(nextText)
-  //   if (lastText !== '') nodeCompleteTexts.push(lastText)
-  //   matches[selector] = nodeCompleteTexts
-  // })
-
-  // return generateJSONResponse(
-  //   processJSONResponseToShields({
-  //     result: selectors.length === 1 ? matches[selectors[0]] : matches
-  //   }), pretty)
 }
