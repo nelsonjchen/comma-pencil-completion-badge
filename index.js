@@ -139,6 +139,7 @@ async function handleRequest(request) {
       label: "Count and Percentage of Images Labeled",
       message: `${diffFileNames.length}, ${percentage}`,
       color,
+      cacheSeconds: 1800,
     }, pretty)
   }
 
@@ -152,6 +153,7 @@ async function handleRequest(request) {
     label: "Count and Percentage of Images Labeled",
     message: `${diffFileNames.length}, ${percentage}`,
     color,
+    cacheSeconds: 1800,
   }, pretty)
 
 
