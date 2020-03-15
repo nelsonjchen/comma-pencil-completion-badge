@@ -1,7 +1,7 @@
 // Most code if not all ripped from https://github.com/adamschwartz/web.scraper.workers.dev/blob/995e0fd351bf349955724d403658be9a40c0bf18/index.js#L70-L128
 
-const githubUrl = "https://github.com/nelsonjchen/comma10k/compare/stat_commit...nelsonjchen:master?expand=1"
-const selector = ".content.collapse.js-transitionable > li > a"
+const githubUrl = "https://github.com/commaai/comma10k/compare/9b327ccde35edf7d9bd51af247e3d785a87f759e...commaai:master?expand=1"
+const selector = ".file-info > a"
 const pretty = true
 const spaced = false
 
@@ -23,6 +23,22 @@ const generateJSONResponse = (obj, pretty) => {
   })
 }
 
+const processJSONResponseToShields = (obj) => {
+  const masksChanged = obj.result.filter((name) => name.startsWith('masks/'))
+  const percentage =
+    (
+      (masksChanged.length / 1000.0)
+      * 100
+    ).toFixed(2) + "%"
+
+  return {
+    schemaVersion: 1,
+    label: "compleition",
+    message: percentage,
+    color: 'green',
+    changed: masksChanged
+  }
+}
 
 addEventListener('fetch', event => {
   event.respondWith(handleRequest(event.request))
@@ -36,7 +52,7 @@ async function handleRequest(request) {
 
   const isThisWorkerErrorNotErrorWithinScrapedSite = (
     [530, 503, 502, 403, 400].includes(response.status) &&
-    (server === 'cloudflare' || !server /* Workers preview editor */)
+    (server === 'cloudflare' || !server /* Workers preview editor */ )
   )
 
   if (isThisWorkerErrorNotErrorWithinScrapedSite) {
@@ -76,7 +92,7 @@ async function handleRequest(request) {
 
   } catch (error) {
     return generateJSONResponse({
-        error: `The selector \`${ selector }\` is invalid or another HTML parsing error occured`
+      error: `The selector \`${ selector }\` is invalid or another HTML parsing error occured`
     }, pretty)
   }
 
@@ -105,7 +121,8 @@ async function handleRequest(request) {
     matches[selector] = nodeCompleteTexts
   })
 
-  return generateJSONResponse({
-    result: selectors.length === 1 ? matches[selectors[0]] : matches
-  }, pretty)
+  return generateJSONResponse(
+    processJSONResponseToShields({
+      result: selectors.length === 1 ? matches[selectors[0]] : matches
+    }), pretty)
 }
