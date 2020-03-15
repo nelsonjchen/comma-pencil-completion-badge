@@ -118,8 +118,12 @@ async function handleRequest(request) {
   const percentageFloat = (diffFileNames.length / masksCount) * 100
 
   let color = 'red'
-  if (percentageFloat > 90.0) {
+  if (percentageFloat > 95.0) {
+    color = 'brightgreen'
+  } else if (percentageFloat > 90.0) {
     color = 'green'
+  } else if (percentageFloat > 85.0) {
+    color = 'yellowgreen'
   } else if (percentageFloat > 80.0) {
     color = 'yellow'
   } else if (percentageFloat > 70.0) {
