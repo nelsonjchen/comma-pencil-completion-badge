@@ -1,0 +1,8 @@
+### This file is to show that the API limits the files to just ~350. So we gotta scrape.
+
+### Stat
+https://api.github.com/repos/nelsonjchen/comma10k/compare/stat_commit...commaai:master
+
+### diff
+https://api.github.com/repos/nelsonjchen/comma10k/compare/stat_commit...commaai:master.diff
+
