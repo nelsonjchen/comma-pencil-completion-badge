@@ -94,7 +94,10 @@ async function handleRequest(request) {
 
   let diffFileNames = (await Promise.all(
     diffUrls.map(async (diffUrl) => {
-      let diffResponse = await fetch(`https://github.com${diffUrl}`)
+      let diffResponse = await fetch(
+        `https://github.com${diffUrl}`,
+        { cf: { cacheTtl: 300 } }
+      )
       const rewriter = new HTMLRewriter()
       let filenames = []
       rewriter.on('.file-info > a', {
