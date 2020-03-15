@@ -4,6 +4,7 @@ const githubUrl = "https://github.com/commaai/comma10k/compare/9b327ccde35edf7d9
 const selector = ".file-info > a"
 const pretty = true
 const spaced = false
+const masksCount = 1000
 
 const contentTypes = {
   html: 'text/html;charset=UTF-8',
@@ -111,7 +112,7 @@ async function handleRequest(request) {
     })
   )).flat(1)
 
-  const percentageFloat = (diffFileNames.length / 1000.0) * 100
+  const percentageFloat = (diffFileNames.length / masksCount) * 100
 
   let color = 'red'
   if (percentageFloat > 90.0) {
