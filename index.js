@@ -142,7 +142,7 @@ async function handleRequest(request) {
   const percentage =
     percentageFloat.toFixed(2) + "%"
 
-  if (request.url.endsWith('/badge.json')) {
+  if (request.url.endsWith('/badge.json') || request.url.endsWith('/badge.json.png') ) {
     return generateJSONResponse({
       schemaVersion: 1,
       label: "Count and Percentage of Images Labeled",
