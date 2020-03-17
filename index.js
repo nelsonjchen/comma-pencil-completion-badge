@@ -29,7 +29,13 @@ addEventListener('fetch', event => {
 })
 
 async function handleRequest(request) {
-  const response = await fetch(githubUrl)
+  const response = await fetch(
+    githubUrl, {
+      cf: {
+        cacheTtl: 300
+      }
+    }
+  )
 
   const server = response.headers.get('server')
 
@@ -95,8 +101,11 @@ async function handleRequest(request) {
   let diffFileNames = (await Promise.all(
     diffUrls.map(async (diffUrl) => {
       let diffResponse = await fetch(
-        `https://github.com${diffUrl}`,
-        { cf: { cacheTtl: 300 } }
+        `https://github.com${diffUrl}`, {
+          cf: {
+            cacheTtl: 300
+          }
+        }
       )
       const rewriter = new HTMLRewriter()
       let filenames = []
@@ -133,13 +142,12 @@ async function handleRequest(request) {
   const percentage =
     percentageFloat.toFixed(2) + "%"
 
-  if (request.url.endsWith('/badge.json')) {
+  if (request.url.endsWith('/badge.json') || request.url.endsWith('/badge.json.png') ) {
     return generateJSONResponse({
       schemaVersion: 1,
       label: "Count and Percentage of Images Labeled",
       message: `${diffFileNames.length}, ${percentage}`,
-      color,
-      cacheSeconds: 1800,
+      color
     }, pretty)
   }
 
@@ -153,8 +161,5 @@ async function handleRequest(request) {
     label: "Count and Percentage of Images Labeled",
     message: `${diffFileNames.length}, ${percentage}`,
     color,
-    cacheSeconds: 1800,
   }, pretty)
-
-
 }
