@@ -94,7 +94,7 @@ async function handleRequest(request) {
   let diffUrlsPageCount = Math.floor(changeCount / 300)
   for (let step = 0; step <= diffUrlsPageCount; step++) {
     diffUrls.push(
-      diffUrl.replace('start_entry=300', `start_entry=${step * 300}`)
+      diffUrl.replace(/start_entry=\d+/gi, `start_entry=${step * 300}`)
     )
   }
 
