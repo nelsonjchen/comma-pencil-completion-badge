@@ -1,0 +1,12 @@
+name: Keep Badge Warm
+
+on:
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    - cron:  '*/5 * * * *'
+
+jobs:
+  warm:
+    runs-on: ubuntu-latest
+    steps:
+      - run: curl https://img.shields.io/endpoint?url=https%3A%2F%2Fcomma-pencil-completion-badge.cc.workers.dev%2Fbadge.json
