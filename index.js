@@ -32,7 +32,7 @@ async function handleRequest(request) {
   const response = await fetch(
     githubUrl, {
       cf: {
-        cacheTtl: 300
+        cacheTtl: 600
       }
     }
   )
@@ -103,7 +103,7 @@ async function handleRequest(request) {
       let diffResponse = await fetch(
         `https://github.com${diffUrl}`, {
           cf: {
-            cacheTtl: 300
+            cacheTtl: 600
           }
         }
       )
