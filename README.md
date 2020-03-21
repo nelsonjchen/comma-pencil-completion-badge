@@ -2,6 +2,8 @@
 
 Demo: ![Completion Progress Badge Demo](https://img.shields.io/endpoint?url=https%3A%2F%2Fcomma-pencil-completion-badge.cc.workers.dev%2Fbadge.json)
 
+Also as seen on https://github.com/commaai/comma10k 's README
+
 Use https://shields.io/endpoint and point it to this https://comma-pencil-completion-badge.cc.workers.dev/badge.json
 
 PNG endpoint works too, use
