@@ -9,4 +9,5 @@ jobs:
   warm:
     runs-on: ubuntu-latest
     steps:
+      - run: curl https://github.com/commaai/comma10k/compare/9b327ccde35edf7d9bd51af247e3d785a87f759e...commaai:master?expand=1
       - run: curl https://img.shields.io/endpoint?url=https%3A%2F%2Fcomma-pencil-completion-badge.cc.workers.dev%2Fbadge.json
