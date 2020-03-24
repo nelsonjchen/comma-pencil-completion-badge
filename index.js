@@ -67,7 +67,8 @@ async function handleRequest(request) {
     rewriter.on(changeCountSelector, {
       text(text) {
         if (text.text.length > 0) {
-          changeCount = parseInt(text.text)
+          changeCountText = text.text.replace(',', '')
+          changeCount = parseInt(changeCountText)
         }
       }
     })
