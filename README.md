@@ -13,4 +13,6 @@ https://raster.shields.io/endpoint?url=https://comma-pencil-completion-badge.cc.
 Demo of PNG
 ![Completion Progress Badge PNG Demo](https://raster.shields.io/endpoint?url=https://comma-pencil-completion-badge.cc.workers.dev/badge.json.png)
 
-Code ripped from (Cloudflare Employee): https://github.com/adamschwartz/web.scraper.workers.dev/blob/995e0fd351bf349955724d403658be9a40c0bf18/index.js#L70-L128
+## History
+
+Badge used to scrape GitHub's compare. Now it just uses GitHub Actions on a schedule to generate the JSON. 
