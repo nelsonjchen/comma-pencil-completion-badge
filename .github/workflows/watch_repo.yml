@@ -3,6 +3,7 @@ name: Generate Badge JSON on schedule
 on:
   schedule:
     - cron:  '*/5 * * * *'
+  push:
 
 jobs:
   generate:
