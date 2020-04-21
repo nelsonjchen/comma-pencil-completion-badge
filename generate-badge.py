@@ -2,10 +2,24 @@ import subprocess
 import json
 from pathlib import Path
 
-mask_count = 1000
+mask_count = 2000
 
-out = subprocess.check_output("git diff --name-only HEAD 9b327ccde35edf7d9bd51af247e3d785a87f759e masks/*", cwd="comma10k", shell=True).strip().split(b"\n")
-count_done = len(out)
+touched_commit_pairs = [
+    "675f01fec8ebd430f2781ccdef6c17bd542ad9c5~1 9b327ccde35edf7d9bd51af247e3d785a87f759e",
+    "HEAD 675f01fec8ebd430f2781ccdef6c17bd542ad9c5",
+]
+
+touched_masks = set()
+
+for touched_commit_pair in touched_commit_pairs:
+    touched_masks = touched_masks.union(
+        subprocess.check_output(f"git diff --name-only {touched_commit_pair} masks/*", cwd="comma10k", shell=True).strip().split(b"\n")
+    )
+
+# Remove empty string when new masks are dropped
+touched_masks.discard(b'')
+
+count_done = len(touched_masks)
 
 percentage_float = (count_done / mask_count) * 100
 
