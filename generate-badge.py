@@ -2,11 +2,15 @@ import subprocess
 import json
 from pathlib import Path
 
-mask_count = 2000
+mask_count = \
+    1000 + \
+    1000 + \
+    100
 
 touched_commit_pairs = [
     "675f01fec8ebd430f2781ccdef6c17bd542ad9c5~1 9b327ccde35edf7d9bd51af247e3d785a87f759e",
-    "HEAD 675f01fec8ebd430f2781ccdef6c17bd542ad9c5",
+    "0c2e5ee5e4f2f72ab0c2e2521344b1035fdaddba~1 675f01fec8ebd430f2781ccdef6c17bd542ad9c5",
+    "HEAD 0c2e5ee5e4f2f72ab0c2e2521344b1035fdaddba",
 ]
 
 touched_masks = set()
