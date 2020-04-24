@@ -20,12 +20,6 @@ touched_masks_count_and_pairs = [
 
 mask_count = sum(t.count for t in touched_masks_count_and_pairs)
 
-touched_commit_pairs = [
-    "675f01fec8ebd430f2781ccdef6c17bd542ad9c5~1 9b327ccde35edf7d9bd51af247e3d785a87f759e",
-    "0c2e5ee5e4f2f72ab0c2e2521344b1035fdaddba~1 675f01fec8ebd430f2781ccdef6c17bd542ad9c5",
-    "HEAD 0c2e5ee5e4f2f72ab0c2e2521344b1035fdaddba",
-]
-
 touched_masks = set()
 
 for touched_commit_pair in touched_masks_count_and_pairs:
