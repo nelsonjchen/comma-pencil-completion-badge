@@ -6,8 +6,11 @@ from pathlib import Path
 TouchedMasks = namedtuple("TouchedMasks", ["count", "commit_pair_str"])
 
 touched_masks_count_and_pairs = [
+    # Initial 1000
     TouchedMasks(1000, "675f01fec8ebd430f2781ccdef6c17bd542ad9c5~1 9b327ccde35edf7d9bd51af247e3d785a87f759e"),
+    # Second 1000
     TouchedMasks(1000, "0c2e5ee5e4f2f72ab0c2e2521344b1035fdaddba~1 675f01fec8ebd430f2781ccdef6c17bd542ad9c5"),
+    # Hard 100
     TouchedMasks(100, "HEAD 0c2e5ee5e4f2f72ab0c2e2521344b1035fdaddba"),
 ]
 
