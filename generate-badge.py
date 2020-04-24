@@ -1,11 +1,17 @@
 import subprocess
 import json
+from collections import namedtuple
 from pathlib import Path
 
-mask_count = \
-    1000 + \
-    1000 + \
-    100
+TouchedMasks = namedtuple("TouchedMasks", ["count", "commit_pair_str"])
+
+touched_masks_count_and_pairs = [
+    TouchedMasks(1000, "675f01fec8ebd430f2781ccdef6c17bd542ad9c5~1 9b327ccde35edf7d9bd51af247e3d785a87f759e"),
+    TouchedMasks(1000, "0c2e5ee5e4f2f72ab0c2e2521344b1035fdaddba~1 675f01fec8ebd430f2781ccdef6c17bd542ad9c5"),
+    TouchedMasks(100, "HEAD 0c2e5ee5e4f2f72ab0c2e2521344b1035fdaddba"),
+]
+
+mask_count = sum(t.count for t in touched_masks_count_and_pairs)
 
 touched_commit_pairs = [
     "675f01fec8ebd430f2781ccdef6c17bd542ad9c5~1 9b327ccde35edf7d9bd51af247e3d785a87f759e",
@@ -15,9 +21,10 @@ touched_commit_pairs = [
 
 touched_masks = set()
 
-for touched_commit_pair in touched_commit_pairs:
+for touched_commit_pair in touched_masks_count_and_pairs:
     touched_masks = touched_masks.union(
-        subprocess.check_output(f"git diff --name-only {touched_commit_pair} masks/*", cwd="comma10k", shell=True).strip().split(b"\n")
+        subprocess.check_output(f"git diff --name-only {touched_commit_pair.commit_pair_str} masks/*", cwd="comma10k",
+                                shell=True).strip().split(b"\n")
     )
 
 # Remove empty string when new masks are dropped
