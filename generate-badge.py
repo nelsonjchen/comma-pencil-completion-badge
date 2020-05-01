@@ -50,8 +50,8 @@ else:
 
 badge_json = {
     'schemaVersion': 1,
-    'label': "Count and Percentage of Images Labeled",
-    'message': f"{count_done}, {percentage_float}%",
+    'label': "Count and Percentage of Available Images Labeled",
+    'message': f"{count_done} out of {mask_count}, {percentage_float:.2f}%",
     'color': color,
 }
 
