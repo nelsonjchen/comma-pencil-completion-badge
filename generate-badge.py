@@ -14,7 +14,7 @@ touched_masks_count_and_pairs = [
     TouchedMasks(100, "6bfbd3202cc88071d9b48b41cd75ecb63f1bf666~1 0c2e5ee5e4f2f72ab0c2e2521344b1035fdaddba"),
     # Requests 2
     TouchedMasks(2, "43e5683571a41e0e8713f69ceb9c18e0feeb9678~1 6bfbd3202cc88071d9b48b41cd75ecb63f1bf666"),
-    # Requests 5
+    # Requests 6
     TouchedMasks(6, "HEAD 43e5683571a41e0e8713f69ceb9c18e0feeb9678"),
 ]
 
