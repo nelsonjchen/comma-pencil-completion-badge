@@ -23,7 +23,11 @@ touched_masks_count_and_pairs = [
     # Third 500
     TouchedMasks(500, "32d6b7c14b0c0e36c4c9917bf2cf367ebddc98c7~1 57dd7aa6b4a5c88baf35f543c62ddcd95f9b3e3a"),
     # Hard 300
-    TouchedMasks(300, "HEAD 32d6b7c14b0c0e36c4c9917bf2cf367ebddc98c7"),
+    TouchedMasks(300, "a2a957ba65b832bab03656cfa669832fcb73d52d~1 32d6b7c14b0c0e36c4c9917bf2cf367ebddc98c7"),
+    # Request 1
+    TouchedMasks(300, "4ebc36544a9d813e132653288be33537ce3ba773~1 a2a957ba65b832bab03656cfa669832fcb73d52d"),
+    # Request 1
+    TouchedMasks(300, "HEAD 4ebc36544a9d813e132653288be33537ce3ba773"),
 ]
 
 mask_count = sum(t.count for t in touched_masks_count_and_pairs)
