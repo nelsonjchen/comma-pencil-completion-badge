@@ -1,51 +1,31 @@
 import subprocess
 import json
-from collections import namedtuple
 from pathlib import Path
+import os
 
-TouchedMasks = namedtuple("TouchedMasks", ["count", "commit_pair_str"])
+out = subprocess.check_output(
+    "git rev-list --objects --all | awk '$2' | sort -k2 | uniq -cf1 | sort -rn",
+    shell=True,
+    cwd="comma10k"
+) \
+    .strip().split(b"\n")
+fnn = []
+al = 0
+for j in out:
+    jj = j.strip().split(b" ")
+    if len(jj) != 3:
+        continue
+    cnt, _, fn = jj
+    cnt = int(cnt)
+    if os.path.isfile(b"comma10k/" + fn) and fn.startswith(b"masks/"):
+        if cnt > 1:
+            fnn.append(fn)
+        al += 1
+out = sorted(fnn)
 
-touched_masks_count_and_pairs = [
-    # Initial 1000
-    TouchedMasks(1000, "675f01fec8ebd430f2781ccdef6c17bd542ad9c5~1 9b327ccde35edf7d9bd51af247e3d785a87f759e"),
-    # Second 1000
-    TouchedMasks(1000, "0c2e5ee5e4f2f72ab0c2e2521344b1035fdaddba~1 675f01fec8ebd430f2781ccdef6c17bd542ad9c5"),
-    # Hard 100
-    TouchedMasks(100, "6bfbd3202cc88071d9b48b41cd75ecb63f1bf666~1 0c2e5ee5e4f2f72ab0c2e2521344b1035fdaddba"),
-    # Requests 2
-    TouchedMasks(2, "43e5683571a41e0e8713f69ceb9c18e0feeb9678~1 6bfbd3202cc88071d9b48b41cd75ecb63f1bf666"),
-    # Requests 6
-    TouchedMasks(6, "f0546384e0c623d4ca97e4e17504d13a7a6a7b40~1 43e5683571a41e0e8713f69ceb9c18e0feeb9678"),
-    # Requests 7
-    TouchedMasks(7, "e232ee883eebbf713aa6e3de955f8d27e3263e54~1 f0546384e0c623d4ca97e4e17504d13a7a6a7b40"),
-    # Requests 52
-    TouchedMasks(52, "57dd7aa6b4a5c88baf35f543c62ddcd95f9b3e3a~1 e232ee883eebbf713aa6e3de955f8d27e3263e54"),
-    # Third 500
-    TouchedMasks(500, "32d6b7c14b0c0e36c4c9917bf2cf367ebddc98c7~1 57dd7aa6b4a5c88baf35f543c62ddcd95f9b3e3a"),
-    # Hard 300
-    TouchedMasks(300, "a2a957ba65b832bab03656cfa669832fcb73d52d~1 32d6b7c14b0c0e36c4c9917bf2cf367ebddc98c7"),
-    # Request 1
-    TouchedMasks(1, "4ebc36544a9d813e132653288be33537ce3ba773~1 a2a957ba65b832bab03656cfa669832fcb73d52d"),
-    # Request 1
-    TouchedMasks(1, "17d62c92ee3206b98a112ba7efcbc9a85ce237a6 4ebc36544a9d813e132653288be33537ce3ba773"),
-    # Request 1
-    TouchedMasks(1, "78ee4d981ca29a215f212a08e5f282554a16975e 17d62c92ee3206b98a112ba7efcbc9a85ce237a6"),
-    # Request 1
-    TouchedMasks(3, "HEAD 78ee4d981ca29a215f212a08e5f282554a16975e"),
-]
+mask_count = al
 
-mask_count = sum(t.count for t in touched_masks_count_and_pairs)
-
-# Can't be bothered to fix counting bug. Just add one. We'll do better for next commits.
-mask_count += 1
-
-touched_masks = set()
-
-for touched_commit_pair in touched_masks_count_and_pairs:
-    touched_masks = touched_masks.union(
-        subprocess.check_output(f"git diff --name-only {touched_commit_pair.commit_pair_str} masks/*", cwd="comma10k",
-                                shell=True).strip().split(b"\n")
-    )
+touched_masks = set(out)
 
 # Remove empty string when new masks are dropped
 touched_masks.discard(b'')
